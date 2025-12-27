@@ -14,15 +14,15 @@ jobs:
   build-and-push:
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    outputs:
+      owner_lc: ${{ steps.set_owner.outputs.owner_lc }}
 
     steps:
       - uses: actions/checkout@v6
 
       - name: Set lowercase repository owner
-        run: |
-          echo "OWNER_LC=${OWNER,,}" >> ${GITHUB_ENV}
-        env:
-          OWNER: "${{ github.repository_owner }}"
+        id: set_owner
+        run: echo "owner_lc=$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
 
       - name: Set up JDK 17
         uses: actions/setup-java@v5
@@ -47,8 +47,8 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ env.OWNER_LC }}/take-one-app-backend:latest
-            ghcr.io/${{ env.OWNER_LC }}/take-one-app-backend:${{ github.sha }}
+            ghcr.io/${{ steps.set_owner.outputs.owner_lc }}/take-one-app-backend:latest
+            ghcr.io/${{ steps.set_owner.outputs.owner_lc }}/take-one-app-backend:${{ github.sha }}
 
   deploy:
     needs: build-and-push
@@ -62,7 +62,7 @@ jobs:
         uses: appleboy/ssh-action@v1.0.0
         env:
           FIREBASE_SECRET: ${{ secrets.TAKE_ONE_APP_FIREBASE_SERVICE_ACCOUNT_JSON }}
-          IMAGE_NAME: ghcr.io/${{ env.OWNER_LC }}/take-one-app-backend:latest
+          IMAGE_NAME: ghcr.io/${{ needs.build-and-push.outputs.owner_lc }}/take-one-app-backend:latest
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USERNAME }}
@@ -110,6 +110,8 @@ jobs:
                     condition: service_healthy
                   redis:
                     condition: service_healthy
+                networks:
+                  - takeone-network
                 restart: unless-stopped
 
               mysql:
@@ -125,6 +127,8 @@ jobs:
                   retries: 10
                 volumes:
                   - mysql_data:/var/lib/mysql
+                networks:
+                  - takeone-network
                 restart: unless-stopped
 
               redis:
@@ -136,10 +140,16 @@ jobs:
                   interval: 10s
                   timeout: 5s
                   retries: 5
+                networks:
+                  - takeone-network
                 restart: unless-stopped
 
             volumes:
               mysql_data:
+
+            networks:
+              takeone-network:
+                driver: bridge
             EOF
 
             # Detect if 'docker compose' or 'docker-compose' is available
