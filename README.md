@@ -54,39 +54,45 @@ docker compose up
 
 ## 🚢 Production Deployment
 
-Automated deployment is handled via GitHub Actions using a **Registry-Based Strategy (GHCR)**. This keeps your source code secure and your VPS deployments fast.
+Deployment is automated via GitHub Actions. The strategy involves building a Docker image, pushing it to the GitHub Container Registry (GHCR), and then deploying it to the VPS. This keeps your source code secure and deployments fast and consistent.
 
-### 1. VPS Setup (Initial Only)
-1.  SSH into your VPS.
-2.  Install Docker and Docker Compose.
-3.  Login to GHCR (requires a GitHub PAT with `read:packages` permission):
-    ```bash
-    echo "YOUR_PAT_TOKEN" | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-stdin
-    ```
-
-### 2. GitHub Configuration
-Go to **Settings > Secrets and variables > Actions** and add the following:
+### 1. GitHub Configuration
+Go to your repository's **Settings > Secrets and variables > Actions** and add the following:
 
 #### Repository Secrets
 | Secret | Description |
 |--------|-------------|
-| `VPS_HOST` | IP address of your VPS |
-| `VPS_USERNAME` | SSH username (e.g., `root`) |
-| `VPS_SSH_KEY` | Private SSH Key (e.g., contents of `id_rsa`) |
-| `TAKE_ONE_APP_FIREBASE_SERVICE_ACCOUNT_JSON` | **Base64 encoded** Firebase JSON. |
+| `VPS_HOST` | IP address of your production VPS. |
+| `VPS_USERNAME` | SSH username for the VPS (e.g., `root`). |
+| `VPS_SSH_KEY` | The private SSH key used to access the VPS. |
+| `TAKE_ONE_APP_FIREBASE_SERVICE_ACCOUNT_JSON` | The **Base64 encoded** content of your Firebase service account JSON file. |
 
 #### Repository Variables
 | Variable | Value |
 |----------|-------|
-| `PROJECT_PATH` | The absolute path on your VPS (e.g., `/var/www/take-one`) |
+| `PROJECT_PATH` | The absolute path on the VPS where the project will be deployed (e.g., `/home/user/take-one-app`). |
 
-### 3. Workflow
-Every push to `main` will:
-1.  Compile the app with Maven.
-2.  Build and push a Docker image to **GHCR**.
-3.  SSH into the VPS.
-4.  Update the `docker-compose.yml` and `.env` on the server.
-5.  Pull the new image and restart the service (`docker-compose pull && docker-compose up -d`).
+### 2. Initial VPS Setup
+Before the first deployment, you need to prepare your VPS:
+
+1.  **Install Docker**: Ensure Docker and Docker Compose are installed on your VPS. If you are using a managed hosting service like Hostinger, it is recommended to use their control panel for this.
+2.  **GHCR Login (Optional but Recommended)**: If your container images are private, you must log your VPS's Docker daemon into GHCR. This requires a GitHub Personal Access Token (PAT) with `read:packages` permission.
+    ```bash
+    echo "YOUR_PAT_TOKEN" | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-stdin
+    ```
+
+> **Troubleshooting Note:** If you encounter errors like `blob not found` or `no such file or directory` during the `docker compose pull` step of a deployment, it indicates your Docker installation on the VPS may be corrupted. The most reliable solution is to use your hosting provider's panel to completely **uninstall and reinstall Docker**.
+
+### 3. Automated Workflow
+Every push to the `main` branch triggers the following automated workflow:
+1.  **Build**: The application is compiled into a JAR file using Maven.
+2.  **Package**: A Docker image is built and pushed to the GitHub Container Registry (GHCR).
+3.  **Deploy**: The workflow connects to your VPS via SSH and:
+    a. Creates the project directory.
+    b. Dynamically generates a `.env` file containing the Firebase credentials.
+    c. Dynamically generates a `docker-compose.yml` file configured with the correct image name and services.
+    d. Executes `docker compose pull` to download the latest application image.
+    e. Restarts the services with `docker compose up -d` to apply the update.
 
 
 
