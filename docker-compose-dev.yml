@@ -1,9 +1,27 @@
-version: '3.8'
-
 services:
+  app:
+    build: .
+    container_name: take1_backend_app_dev
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_URL=jdbc:mysql://mysql:3306/take1app?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      - DB_USERNAME=root
+      - DB_PASSWORD=root
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - FIREBASE_CONFIG_PATH=/app/firebase-service-account.json
+      - APP_FIREBASE_CONFIG_BASE64=${FIREBASE_CONFIG_BASE64}
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
   mysql:
     image: mysql:8.0
-    container_name: artist_backend_mysql_dev
+    container_name: take1_backend_mysql_dev
     ports:
       - "3306:3306"
     environment:
@@ -18,7 +36,7 @@ services:
 
   redis:
     image: redis:alpine
-    container_name: artist_backend_redis_dev
+    container_name: take1_backend_redis_dev
     ports:
       - "6379:6379"
     healthcheck:
@@ -29,3 +47,4 @@ services:
 
 volumes:
   mysql_dev_data:
+
