@@ -1,0 +1,35 @@
+CREATE TABLE users (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    uid VARCHAR(255) NOT NULL UNIQUE,
+    username VARCHAR(255) UNIQUE,
+    username_hash VARCHAR(255) UNIQUE,
+    email TEXT,
+    mobile TEXT,
+    first_name TEXT,
+    last_name TEXT,
+    dob VARCHAR(255),
+    display_name VARCHAR(255),
+    company VARCHAR(255),
+    location VARCHAR(255),
+    profile_picture_url VARCHAR(1000),
+    account_type VARCHAR(50),
+    is_portfolio_created BOOLEAN DEFAULT FALSE,
+    is_email_verified BOOLEAN DEFAULT FALSE,
+    is_phone_verified BOOLEAN DEFAULT FALSE,
+    is_active BOOLEAN DEFAULT TRUE,
+    last_login DATETIME,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+CREATE TABLE sessions (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    refresh_token VARCHAR(255) NOT NULL UNIQUE,
+    device_id VARCHAR(255),
+    ip_address VARCHAR(255),
+    expires_at DATETIME,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    last_accessed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_session_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
