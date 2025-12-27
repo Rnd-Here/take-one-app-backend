@@ -1,6 +1,7 @@
+
 services:
   app:
-    image: ghcr.io/${GITHUB_REPOSITORY_OWNER}/take-one-app-backend:latest
+    image: ghcr.io/rnd-here/take-one-app-backend:latest
     ports:
       - "8080:8080"
     environment:
@@ -17,9 +18,9 @@ services:
       redis:
         condition: service_healthy
     restart: unless-stopped
-    # volumes:
+      # volumes:
       # Mount the firebase config if it exists locally in the root (Optional for local testing with file)
-      # - ./firebase-service-account.json:/app/firebase-service-account.json
+    # - ./firebase-service-account.json:/app/firebase-service-account.json
 
   mysql:
     image: mysql:8.0
