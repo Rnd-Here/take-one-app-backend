@@ -18,7 +18,7 @@
 								"exec": [
 									"var jsonData = pm.response.json();",
 									"if (jsonData.sessionToken) {",
-									"    pm.environment.set(\"session_token\", jsonData.sessionToken);",
+									"    pm.collectionVariables.set(\"session_token\", jsonData.sessionToken);",
 									"}"
 								],
 								"type": "text/javascript"
@@ -48,14 +48,14 @@
 								"token"
 							]
 						},
-						"description": "Exchanges a Firebase ID Token for a Session Token. Sets 'session_token' env variable on success."
+						"description": "Exchanges a Firebase ID Token for a Session Token. Sets 'session_token' collection variable on success."
 					},
 					"response": []
 				},
 				{
-					"name": "Validate / Refresh Token",
+					"name": "Validate Session",
 					"request": {
-						"method": "POST",
+						"method": "GET",
 						"header": [
 							{
 								"key": "Authorization",
@@ -63,16 +63,17 @@
 							}
 						],
 						"url": {
-							"raw": "{{base_url}}/api/auth/refresh",
+							"raw": "{{base_url}}/api/auth/validate",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"api",
 								"auth",
-								"refresh"
+								"validate"
 							]
-						}
+						},
+						"description": "Validates the current session token and returns the full user object on success."
 					},
 					"response": []
 				},
@@ -121,6 +122,56 @@
 								"logout"
 							]
 						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout All Devices",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{session_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/auth/logout-all",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"logout-all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Revoke Session by ID",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{session_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/auth/sessions/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"sessions",
+								"1"
+							]
+						},
+						"description": "Revokes a specific session by its ID. Get the ID from the 'Get Active Sessions' endpoint."
 					},
 					"response": []
 				}
@@ -227,7 +278,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"firstName\": \"Artist Updated\",\n    \"lastName\": \"One\",\n    \"location\": \"Los Angeles\",\n    \"isPortfolioCreated\": true\n}"
+							"raw": "{\n    \"firstName\": \"Artist Updated\",\n    \"lastName\": \"One\",\n    \"dob\": \"1991-02-02\",\n    \"username\": \"newartist_updated\",\n    \"mobile\": \"+1987654321\",\n    \"company\": \"Art Studio Inc.\",\n    \"location\": \"Los Angeles\",\n    \"accountType\": \"CREATOR\",\n    \"isPortfolioCreated\": true\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/user/profile",
@@ -254,7 +305,7 @@
 		},
 		{
 			"key": "firebase_id_token",
-			"value": "PASTE_FIREBASE_TOKEN_HERE",
+			"value": "PASTE_FIREBASE_ID_TOKEN_HERE",
 			"type": "string"
 		},
 		{
