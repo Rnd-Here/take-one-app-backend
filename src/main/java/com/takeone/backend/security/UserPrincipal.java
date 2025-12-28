@@ -23,7 +23,7 @@ public class UserPrincipal implements Serializable {
     private AccountType accountType;
 
     public boolean isArtist() {
-        return AccountType.ARTIST.equals(accountType);
+        return AccountType.CREATOR.equals(accountType);
     }
 
     public boolean isScout() {

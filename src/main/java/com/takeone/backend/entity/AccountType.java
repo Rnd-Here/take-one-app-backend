@@ -7,7 +7,7 @@ public enum AccountType {
     /**
      * Artists - Create portfolios, post content, apply for jobs
      */
-    ARTIST,
+    CREATOR,
 
     /**
      * Scouts - Discover talent, view portfolios
