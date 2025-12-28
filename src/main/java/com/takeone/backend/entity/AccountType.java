@@ -1,0 +1,26 @@
+package com.takeone.backend.entity;
+
+/**
+ * User account types for the talent management platform
+ */
+public enum AccountType {
+    /**
+     * Artists - Create portfolios, post content, apply for jobs
+     */
+    ARTIST,
+
+    /**
+     * Scouts - Discover talent, view portfolios
+     */
+    SCOUT,
+
+    /**
+     * Employers - Post job opportunities, hire talent
+     */
+    EMPLOYER,
+
+    /**
+     * Admin - Platform administration
+     */
+    ADMIN
+}

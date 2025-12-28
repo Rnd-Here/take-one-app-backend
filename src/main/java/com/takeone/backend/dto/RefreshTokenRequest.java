@@ -11,23 +11,14 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 /**
- * Authentication Response
- * Returns session token and user details to UI
+ * Refresh Token Request
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class AuthResponse {
+public class RefreshTokenRequest {
 
-    // Session information
-    private String sessionToken;
-    private LocalDateTime expiresAt;
-
-    // User information
-    private UserResponse user;
-
-    // Error message (if any)
-    private String error;
+    @NotBlank(message = "Refresh token is required")
+    private String refreshToken;
 }

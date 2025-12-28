@@ -30,11 +30,20 @@ The application needs your Firebase credentials.
 
 ### 2. Run the Application
 
-#### For Local Development (Build from source)
-Use this if you want to test code changes locally on your machine.
-```bash
-docker compose -f docker-compose-dev.yml up --build
-```
+#### For Local Development (Hot-Reloading)
+Use this for rapid local development with hot-reloading provided by `spring-boot-devtools`. Changes to your local source code (`src` directory and `pom.xml`) will be automatically detected and recompiled/reloaded inside the running container.
+
+1.  **First-time setup or Dockerfile.dev changes**:
+    ```bash
+    docker compose -f docker-compose-dev.yml up --build
+    ```
+2.  **Subsequent runs (after initial build)**:
+    ```bash
+    docker compose -f docker-compose-dev.yml up
+    ```
+    Now, simply modify your local Java files in the `src` directory. The application inside the Docker container will automatically restart and reflect your changes.
+
+*Note: The first run (or any run after changes to `Dockerfile.dev`) requires `--build` to create the development image. Subsequent runs can omit `--build` as `docker-compose` will use the existing image and rely on mounted volumes for code changes.*
 
 #### For Production-like Testing (Using Registry Image)
 Use this if you want to test the exact image that will be deployed to the VPS.

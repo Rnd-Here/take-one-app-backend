@@ -4,14 +4,15 @@ import com.takeone.backend.entity.AccountType;
 import lombok.Data;
 
 @Data
-public class UpdateProfileRequest {
+public class UserDto {
+    private String uid;
+    private String username;
+    private String displayName;
+    private String email;
+    private String mobile;
     private String firstName;
     private String lastName;
-    private String dob;
-    private String username;
-    private String mobile;
-    private String company;
-    private String location;
+    private String profilePictureUrl;
     private AccountType accountType;
     private Boolean isPortfolioCreated;
 }
