@@ -17,5 +17,5 @@ import lombok.NoArgsConstructor;
 public class AuthRequest {
 
     @NotBlank(message = "Firebase token is required")
-    private String firebaseToken;
+    private String idToken;
 }

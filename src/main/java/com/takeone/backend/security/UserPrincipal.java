@@ -30,7 +30,11 @@ public class UserPrincipal implements Serializable {
         return AccountType.SCOUT.equals(accountType);
     }
 
-    public boolean isEmployer() {
-        return AccountType.EMPLOYER.equals(accountType);
+    public boolean isFanatic() {
+        return AccountType.FANATICS.equals(accountType);
+    }
+
+    public boolean isNewUser(){
+        return AccountType.NEW_USER.equals(accountType);
     }
 }

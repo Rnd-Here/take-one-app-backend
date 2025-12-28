@@ -1,7 +1,5 @@
 package com.takeone.backend.service;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
 import com.takeone.backend.dto.AuthRequest;
 import com.takeone.backend.dto.UserResponse;
@@ -22,16 +20,16 @@ import java.util.Optional;
 public class AuthService {
 
     private final UserRepository userRepository;
-    private final FirebaseAuth firebaseAuth;
+    private final FirebaseService firebaseService;
 
     /**
      * Authenticate user with Firebase token
      * Creates or updates user in database
      */
     @Transactional
-    public User authenticateWithFirebase(AuthRequest request) throws FirebaseAuthException {
+    public User authenticateWithFirebase(AuthRequest request) throws Exception {
         // Verify Firebase token
-        FirebaseToken decodedToken = firebaseAuth.verifyIdToken(request.getFirebaseToken());
+        FirebaseToken decodedToken = firebaseService.verifyToken(request.getIdToken());
         String uid = decodedToken.getUid();
 
         log.info("Firebase token verified for UID: {}", uid);
@@ -106,33 +104,29 @@ public class AuthService {
             user.setMobile(phone);
             user.setIsPhoneVerified(true);
         } else {
+            user.setMobile(null);
             user.setIsPhoneVerified(false);
         }
-
         // Display name from Firebase
         String name = token.getName();
         if (name != null && !name.isEmpty()) {
             user.setDisplayName(name);
         }
-
         // Profile picture from Firebase
         String picture = token.getPicture();
         if (picture != null && !picture.isEmpty()) {
             user.setProfilePictureUrl(picture);
         }
-
         // Generate temporary username from UID (user can change later)
         user.setUsername(generateTemporaryUsername(token.getUid()));
 
         // Set default values
-        user.setAccountType(AccountType.ARTIST); // Default, user can change in profile setup
+        user.setAccountType(AccountType.NEW_USER); // Default, user can change in profile setup
         user.setIsPortfolioCreated(false);
         user.setIsActive(true);
         user.setLastLogin(LocalDateTime.now());
-
         User savedUser = userRepository.save(user);
         log.info("New user created successfully: {}", savedUser.getUid());
-
         return savedUser;
     }
 
@@ -154,8 +148,6 @@ public class AuthService {
                 .id(user.getId())
                 .uid(user.getUid())
                 .username(user.getUsername())
-                .email(user.getEmail())
-                .mobile(user.getMobile())
                 .displayName(user.getDisplayName())
                 .profilePictureUrl(user.getProfilePictureUrl())
                 .accountType(user.getAccountType())

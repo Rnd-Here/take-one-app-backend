@@ -21,8 +21,6 @@ public class UserResponse {
     private Long id;
     private String uid;
     private String username;
-    private String email;
-    private String mobile;
     private String displayName;
     private String profilePictureUrl;
     private AccountType accountType;

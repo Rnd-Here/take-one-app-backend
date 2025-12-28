@@ -73,7 +73,7 @@ public class AuthController {
      * Refresh session token
      * Extends session expiry and returns new token
      */
-    @PostMapping("/refresh-token")
+    @PostMapping("/refresh")
     public ResponseEntity<AuthResponse> refreshToken(
             @Valid @RequestBody RefreshTokenRequest request,
             HttpServletRequest httpRequest

@@ -47,20 +47,7 @@ public class SessionAuthenticationFilter extends OncePerRequestFilter {
                     
                     if (user != null && user.getIsActive()) {
                         // Create authentication token
-                        UserPrincipal userPrincipal = new UserPrincipal(
-                            user.getId(),
-                            user.getUid(),
-                            user.getUsername(),
-                            user.getEmail(),
-                            user.getAccountType()
-                        );
-
-                        UsernamePasswordAuthenticationToken authentication =
-                                new UsernamePasswordAuthenticationToken(
-                                        userPrincipal,
-                                        null,
-                                        Collections.emptyList()
-                                );
+                        UsernamePasswordAuthenticationToken authentication = getAuthenticationToken(user);
 
                         authentication.setDetails(
                                 new WebAuthenticationDetailsSource().buildDetails(request)
@@ -82,6 +69,22 @@ public class SessionAuthenticationFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    private static @org.checkerframework.checker.nullness.qual.NonNull UsernamePasswordAuthenticationToken getAuthenticationToken(User user) {
+        UserPrincipal userPrincipal = new UserPrincipal(
+            user.getId(),
+            user.getUid(),
+            user.getUsername(),
+            user.getEmail(),
+            user.getAccountType()
+        );
+
+        return new UsernamePasswordAuthenticationToken(
+                userPrincipal,
+                null,
+                Collections.emptyList()
+        );
     }
 
     /**

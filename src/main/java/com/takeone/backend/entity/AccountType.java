@@ -17,10 +17,15 @@ public enum AccountType {
     /**
      * Employers - Post job opportunities, hire talent
      */
-    EMPLOYER,
+    FANATICS,
 
     /**
      * Admin - Platform administration
      */
-    ADMIN
+    ADMIN,
+
+    /**
+     * Default Account Type until user selects
+     */
+    NEW_USER
 }

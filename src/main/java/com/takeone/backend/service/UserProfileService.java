@@ -7,6 +7,7 @@ import com.takeone.backend.repository.UserRepository;
 import com.takeone.backend.util.HashUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -112,6 +113,19 @@ public class UserProfileService {
      */
     private void validateAndSetUsername(User user, String username) {
         // Normalize username
+        String normalizedUsername = getNormalizedUsername(username);
+
+        // Check availability
+        if (!usernameService.isUsernameAvailable(normalizedUsername)) {
+            throw new IllegalArgumentException("Username is already taken");
+        }
+
+        // Set username and hash
+        user.setUsername(normalizedUsername);
+        user.setUsernameHash(HashUtil.sha256(normalizedUsername));
+    }
+
+    private static @NonNull String getNormalizedUsername(String username) {
         String normalizedUsername = username.toLowerCase().trim();
 
         // Check length
@@ -123,15 +137,7 @@ public class UserProfileService {
         if (!normalizedUsername.matches("^[a-z0-9_]+$")) {
             throw new IllegalArgumentException("Username can only contain lowercase letters, numbers, and underscores");
         }
-
-        // Check availability
-        if (!usernameService.isUsernameAvailable(normalizedUsername)) {
-            throw new IllegalArgumentException("Username is already taken");
-        }
-
-        // Set username and hash
-        user.setUsername(normalizedUsername);
-        user.setUsernameHash(HashUtil.sha256(normalizedUsername));
+        return normalizedUsername;
     }
 
     /**

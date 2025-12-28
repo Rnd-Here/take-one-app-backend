@@ -76,7 +76,7 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "account_type", nullable = false, length = 20)
-    private AccountType accountType = AccountType.ARTIST;
+    private AccountType accountType = AccountType.NEW_USER;
 
     // Profile completion and verification flags
     @Column(name = "is_portfolio_created", nullable = false)
