@@ -6,6 +6,7 @@ import com.takeone.backend.repository.SessionRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -62,6 +63,17 @@ public class SessionService {
         }
 
         Session session = sessionOpt.get();
+
+        // Ensure user is loaded (JOIN FETCH in query should handle this, but being explicit)
+        User user = session.getUser();
+        if (user == null) {
+            log.warn("Session has null user reference");
+            return null;
+        }
+
+        // Explicitly initialize the user proxy to avoid lazy loading issues
+        // This is safer than calling getUsername() and ignoring the result
+        Hibernate.initialize(user);
 
         // Check if session has expired
         if (session.getExpiresAt().isBefore(LocalDateTime.now())) {

@@ -15,9 +15,10 @@ import java.util.Optional;
 public interface SessionRepository extends JpaRepository<Session, Long> {
 
     /**
-     * Find active session by refresh token
+     * Find active session by refresh token with User eagerly loaded
      */
-    Optional<Session> findByRefreshTokenAndIsActiveTrue(String refreshToken);
+    @Query("SELECT s FROM Session s JOIN FETCH s.user WHERE s.refreshToken = :refreshToken AND s.isActive = true")
+    Optional<Session> findByRefreshTokenAndIsActiveTrue(@Param("refreshToken") String refreshToken);
 
     /**
      * Find all active sessions for a user
