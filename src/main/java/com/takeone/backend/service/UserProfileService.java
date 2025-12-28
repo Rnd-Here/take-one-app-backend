@@ -61,8 +61,8 @@ public class UserProfileService {
         // Set profile fields
         updateUserFields(user, request);
 
-        // Mark portfolio as created
-        user.setIsPortfolioCreated(true);
+        // portfolio field remains false unless User starts creating portfolio
+        user.setIsPortfolioCreated(false);
 
         User savedUser = userRepository.save(user);
 
