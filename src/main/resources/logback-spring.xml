@@ -12,6 +12,11 @@
                     defaultValue="00000000-0000-0000-0000-000000000000"/>
     <springProperty scope="context" name="splunkIndex" source="splunk.index" defaultValue="main"/>
 
+    <!-- Grafana Loki Configuration -->
+    <springProperty scope="context" name="lokiUrl" source="loki.url"/>
+    <springProperty scope="context" name="lokiUser" source="loki.user"/>
+    <springProperty scope="context" name="lokiToken" source="loki.token"/>
+
     <!-- Traceability Pattern: ApplicationName:Endpoint:UUID:Java Class:Method:logging message -->
     <property name="TRACE_PATTERN" value="${appName}:%X{endpoint}:%X{traceId}:%C:%M:%msg%n"/>
 
@@ -22,6 +27,25 @@
                 <pattern>${TRACE_PATTERN}</pattern>
             </layout>
         </encoder>
+    </appender>
+
+    <!-- Grafana Loki Appender -->
+    <appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">
+        <http>
+            <url>${lokiUrl}</url>
+            <auth>
+                <username>${lokiUser}</username>
+                <password>${lokiToken}</password>
+            </auth>
+        </http>
+        <format>
+            <label>
+                <pattern>app=${appName},host=${HOSTNAME},level=%level</pattern>
+            </label>
+            <message>
+                <pattern>${TRACE_PATTERN}</pattern>
+            </message>
+        </format>
     </appender>
 
     <!-- Splunk HEC Appender -->
@@ -45,7 +69,7 @@
 
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
-        <appender-ref ref="ASYNC_SPLUNK"/>
+        <appender-ref ref="LOKI"/>
     </root>
 
     <logger name="com.takeone.backend" level="DEBUG"/>

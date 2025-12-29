@@ -2,9 +2,9 @@ name: Build and Deploy
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 permissions:
   contents: read
@@ -62,12 +62,13 @@ jobs:
         uses: appleboy/ssh-action@v1.2.4
         env:
           FIREBASE_SECRET: ${{ secrets.TAKE_ONE_APP_FIREBASE_SERVICE_ACCOUNT_JSON }}
+          LOKI_SECRET: ${{ secrets.GRAFANA_LOKI_TOKEN }}
           IMAGE_NAME: ghcr.io/${{ needs.build-and-push.outputs.owner_lc }}/take-one-app-backend:latest
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.VPS_SSH_KEY }}
-          envs: FIREBASE_SECRET,IMAGE_NAME
+          envs: FIREBASE_SECRET,LOKI_SECRET,IMAGE_NAME
           script: |
             set -eux
             echo "Starting deployment to ${{ vars.PROJECT_PATH }}..."
@@ -83,6 +84,7 @@ jobs:
 
             # Create/Update .env file
             echo "FIREBASE_CONFIG_BASE64=$FIREBASE_SECRET" > .env
+            echo "GRAFANA_LOKI_TOKEN=$LOKI_SECRET" >> .env
             echo "IMAGE_NAME=$IMAGE_NAME" >> .env
 
             echo "Updating docker-compose.yml..."
@@ -105,6 +107,7 @@ jobs:
                   - REDIS_PORT=6379
                   - FIREBASE_CONFIG_PATH=/app/firebase-service-account.json
                   - APP_FIREBASE_CONFIG_BASE64=\${FIREBASE_CONFIG_BASE64}
+                  - GRAFANA_LOKI_TOKEN=\${GRAFANA_LOKI_TOKEN}
                 depends_on:
                   mysql:
                     condition: service_healthy

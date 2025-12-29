@@ -19,6 +19,7 @@ services:
       - REDIS_PORT=6379
       - FIREBASE_CONFIG_PATH=/app/firebase-service-account.json
       - APP_FIREBASE_CONFIG_BASE64=${FIREBASE_CONFIG_BASE64}
+      - GRAFANA_LOKI_TOKEN=${GRAFANA_LOKI_TOKEN}
     depends_on:
       mysql:
         condition: service_healthy
