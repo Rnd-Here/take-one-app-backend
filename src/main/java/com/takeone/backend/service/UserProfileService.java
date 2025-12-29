@@ -90,11 +90,12 @@ public class UserProfileService {
         // If username is being changed, validate it
         if (request.getUsername() != null &&
                 !request.getUsername().equals(user.getUsername())) {
+            String oldUsername = user.getUsername();
             validateAndSetUsername(user, request.getUsername());
 
             // Invalidate both old and new username caches
-            if (user.getUsername() != null) {
-                usernameService.invalidateUsernameCache(user.getUsername());
+            if (oldUsername != null) {
+                usernameService.invalidateUsernameCache(oldUsername);
             }
             usernameService.invalidateUsernameCache(request.getUsername());
         }
