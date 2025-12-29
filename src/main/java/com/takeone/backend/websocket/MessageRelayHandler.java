@@ -22,12 +22,11 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequiredArgsConstructor
 public class MessageRelayHandler extends TextWebSocketHandler {
 
+    // Map: UserId -> WebSocketSession
+    private static final Map<Long, WebSocketSession> sessions = new ConcurrentHashMap<>();
     private final ObjectMapper objectMapper;
     private final MessageRelayService messageRelayService;
     private final UserStatusService userStatusService;
-
-    // Map: UserId -> WebSocketSession
-    private static final Map<Long, WebSocketSession> sessions = new ConcurrentHashMap<>();
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {

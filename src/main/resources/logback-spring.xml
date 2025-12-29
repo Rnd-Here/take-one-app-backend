@@ -2,11 +2,14 @@
 <configuration>
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
 
-    <springProperty scope="context" name="appName" source="spring.application.name" defaultValue="take-one-app-backend"/>
-    
+    <springProperty scope="context" name="appName" source="spring.application.name"
+                    defaultValue="take-one-app-backend"/>
+
     <!-- Splunk Configuration Placeholders -->
-    <springProperty scope="context" name="splunkUrl" source="splunk.url" defaultValue="http://localhost:8088/services/collector/event"/>
-    <springProperty scope="context" name="splunkToken" source="splunk.token" defaultValue="00000000-0000-0000-0000-000000000000"/>
+    <springProperty scope="context" name="splunkUrl" source="splunk.url"
+                    defaultValue="http://localhost:8088/services/collector/event"/>
+    <springProperty scope="context" name="splunkToken" source="splunk.token"
+                    defaultValue="00000000-0000-0000-0000-000000000000"/>
     <springProperty scope="context" name="splunkIndex" source="splunk.index" defaultValue="main"/>
 
     <!-- Traceability Pattern: ApplicationName:Endpoint:UUID:Java Class:Method:logging message -->

@@ -4,18 +4,14 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.takeone.backend.entity.AccountType;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 /**
  * User Profile Request (Create/Update)
  */
 @Data
 @Builder
-@ToString(exclude = { "firstName", "lastName", "dob" })
+@ToString(exclude = {"firstName", "lastName", "dob"})
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)

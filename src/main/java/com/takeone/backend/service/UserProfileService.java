@@ -21,6 +21,21 @@ public class UserProfileService {
     private final UserRepository userRepository;
     private final UsernameService usernameService;
 
+    private static @NonNull String getNormalizedUsername(String username) {
+        String normalizedUsername = username.toLowerCase().trim();
+
+        // Check length
+        if (normalizedUsername.length() < 3 || normalizedUsername.length() > 50) {
+            throw new IllegalArgumentException("Username must be between 3 and 50 characters");
+        }
+
+        // Check format (alphanumeric and underscore only)
+        if (!normalizedUsername.matches("^[a-z0-9_]+$")) {
+            throw new IllegalArgumentException("Username can only contain lowercase letters, numbers, and underscores");
+        }
+        return normalizedUsername;
+    }
+
     /**
      * Get user profile with Redis caching
      * Cache key: "profiles::userId"
@@ -124,21 +139,6 @@ public class UserProfileService {
         // Set username and hash
         user.setUsername(normalizedUsername);
         user.setUsernameHash(HashUtil.sha256(normalizedUsername));
-    }
-
-    private static @NonNull String getNormalizedUsername(String username) {
-        String normalizedUsername = username.toLowerCase().trim();
-
-        // Check length
-        if (normalizedUsername.length() < 3 || normalizedUsername.length() > 50) {
-            throw new IllegalArgumentException("Username must be between 3 and 50 characters");
-        }
-
-        // Check format (alphanumeric and underscore only)
-        if (!normalizedUsername.matches("^[a-z0-9_]+$")) {
-            throw new IllegalArgumentException("Username can only contain lowercase letters, numbers, and underscores");
-        }
-        return normalizedUsername;
     }
 
     /**

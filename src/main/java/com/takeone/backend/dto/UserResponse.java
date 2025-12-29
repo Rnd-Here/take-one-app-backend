@@ -2,12 +2,7 @@ package com.takeone.backend.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.takeone.backend.entity.AccountType;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import lombok.ToString;
+import lombok.*;
 
 /**
  * User Response DTO
@@ -15,7 +10,7 @@ import lombok.ToString;
  */
 @Data
 @Builder
-@ToString(exclude = { "username", "displayName", "profilePictureUrl" })
+@ToString(exclude = {"username", "displayName", "profilePictureUrl"})
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)

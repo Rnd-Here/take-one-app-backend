@@ -2,11 +2,7 @@ package com.takeone.backend.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.takeone.backend.entity.AccountType;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -15,7 +11,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @Builder
-@ToString(exclude = { "email", "mobile", "firstName", "lastName", "dob" })
+@ToString(exclude = {"email", "mobile", "firstName", "lastName", "dob"})
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)

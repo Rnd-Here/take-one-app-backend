@@ -143,6 +143,9 @@ public class AuthController {
     }
 
     // Simple response classes
-    record MessageResponse(String message) {}
-    record ErrorResponse(String error) {}
+    record MessageResponse(String message) {
+    }
+
+    record ErrorResponse(String error) {
+    }
 }

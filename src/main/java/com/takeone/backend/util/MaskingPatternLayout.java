@@ -11,11 +11,8 @@ import java.util.regex.Pattern;
  */
 public class MaskingPatternLayout extends PatternLayout {
 
-    private String mask = "******";
-
     // Pattern for Email
     private static final Pattern EMAIL_PATTERN = Pattern.compile("([\\w\\.\\-]+)@([\\w\\-]+)(\\.[\\w\\-]+)+");
-
     // Pattern for Phone numbers (basic 10-12 digit pattern)
     private static final Pattern PHONE_PATTERN = Pattern.compile("\\+?\\d{10,12}");
 
@@ -58,6 +55,7 @@ public class MaskingPatternLayout extends PatternLayout {
     }
 
     private String performMasking(String value) {
+        String mask = "******";
         if (value.contains("@")) {
             // Email masking: u****r@example.com
             int atIndex = value.indexOf("@");

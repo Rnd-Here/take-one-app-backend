@@ -2,7 +2,6 @@ package com.takeone.backend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -18,7 +17,7 @@ import java.time.LocalDateTime;
 })
 @Getter
 @Setter
-@ToString(exclude = { "email", "mobile", "firstName", "lastName", "dob" })
+@ToString(exclude = {"email", "mobile", "firstName", "lastName", "dob"})
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {

@@ -23,10 +23,26 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class SessionAuthenticationFilter extends OncePerRequestFilter {
 
-    private final SessionService sessionService;
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String BEARER_PREFIX = "Bearer ";
     private static final String SESSION_TOKEN_HEADER = "X-Session-Token";
+    private final SessionService sessionService;
+
+    private static @org.checkerframework.checker.nullness.qual.NonNull UsernamePasswordAuthenticationToken getAuthenticationToken(User user) {
+        UserPrincipal userPrincipal = new UserPrincipal(
+                user.getId(),
+                user.getUid(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getAccountType()
+        );
+
+        return new UsernamePasswordAuthenticationToken(
+                userPrincipal,
+                null,
+                Collections.emptyList()
+        );
+    }
 
     @Override
     protected void doFilterInternal(
@@ -41,10 +57,10 @@ public class SessionAuthenticationFilter extends OncePerRequestFilter {
             if (StringUtils.hasText(sessionToken)) {
                 // Validate session and set authentication
                 Session session = sessionService.validateAndRefreshSession(sessionToken, request);
-                
+
                 if (session != null && session.isValid()) {
                     User user = session.getUser();
-                    
+
                     if (user != null && user.getIsActive()) {
                         // Create authentication token
                         UsernamePasswordAuthenticationToken authentication = getAuthenticationToken(user);
@@ -54,7 +70,7 @@ public class SessionAuthenticationFilter extends OncePerRequestFilter {
                         );
 
                         SecurityContextHolder.getContext().setAuthentication(authentication);
-                        
+
                         log.debug("Session authenticated for user: {}", user.getUsername());
                     } else {
                         log.warn("User is inactive or null for session token");
@@ -69,22 +85,6 @@ public class SessionAuthenticationFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
-    }
-
-    private static @org.checkerframework.checker.nullness.qual.NonNull UsernamePasswordAuthenticationToken getAuthenticationToken(User user) {
-        UserPrincipal userPrincipal = new UserPrincipal(
-            user.getId(),
-            user.getUid(),
-            user.getUsername(),
-            user.getEmail(),
-            user.getAccountType()
-        );
-
-        return new UsernamePasswordAuthenticationToken(
-                userPrincipal,
-                null,
-                Collections.emptyList()
-        );
     }
 
     /**

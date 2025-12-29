@@ -1,12 +1,7 @@
 package com.takeone.backend.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import lombok.ToString;
+import lombok.*;
 
 /**
  * Authentication Request

@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "user_device_tokens", uniqueConstraints = {
         @UniqueConstraint(name = "uk_fcm_token", columnNames = "fcm_token"),
-        @UniqueConstraint(name = "uk_user_device", columnNames = { "user_id", "device_id" })
+        @UniqueConstraint(name = "uk_user_device", columnNames = {"user_id", "device_id"})
 })
 @DynamicUpdate // Efficient for toggling isActive flag
 public class DeviceToken {

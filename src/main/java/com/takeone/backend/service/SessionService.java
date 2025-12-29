@@ -20,11 +20,11 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class SessionService {
 
-    private final SessionRepository sessionRepository;
-    private final DeviceTokenService deviceTokenService;
     private static final int SESSION_EXPIRY_DAYS = 30;
     private static final int TOKEN_LENGTH = 64; // bytes, results in 88 char base64 string
     private static final SecureRandom secureRandom = new SecureRandom();
+    private final SessionRepository sessionRepository;
+    private final DeviceTokenService deviceTokenService;
 
     /**
      * Create a new session for a user
@@ -153,7 +153,9 @@ public class SessionService {
                 deviceTokenService.deactivateToken(session.getUser().getId(), session.getDeviceId());
             }
 
-            log.info("Invalidated session and deactivated FCM token for user: {}", session.getUser().getUsername());
+            if (session.getUser() != null) {
+                log.info("Invalidated session and deactivated FCM token for user: {}", session.getUser().getUsername());
+            }
         }
     }
 

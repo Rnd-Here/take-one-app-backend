@@ -15,14 +15,14 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserPrincipal implements Serializable {
-    
+
     private Long id;
     private String uid; // Firebase UID
     private String username;
     private String email;
     private AccountType accountType;
 
-    public boolean isArtist() {
+    public boolean isCreator() {
         return AccountType.CREATOR.equals(accountType);
     }
 
@@ -34,7 +34,7 @@ public class UserPrincipal implements Serializable {
         return AccountType.FANATICS.equals(accountType);
     }
 
-    public boolean isNewUser(){
+    public boolean isNewUser() {
         return AccountType.NEW_USER.equals(accountType);
     }
 }

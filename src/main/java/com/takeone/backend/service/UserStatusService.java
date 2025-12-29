@@ -1,10 +1,6 @@
 package com.takeone.backend.service;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -17,9 +13,9 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class UserStatusService {
 
-    private final RedisTemplate<String, Object> redisTemplate;
     private static final String STATUS_KEY_PREFIX = "user:status:";
     private static final long OFFLINE_THRESHOLD_MINUTES = 30;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     /**
      * Mark user as online

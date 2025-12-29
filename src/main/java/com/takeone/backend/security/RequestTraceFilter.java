@@ -14,13 +14,12 @@ import java.io.IOException;
 @Component
 public class RequestTraceFilter extends OncePerRequestFilter {
 
-    private final String appName;
     private static final String TRACE_ID_HEADER = "X-Trace-Id";
-
     // MDC Keys
     private static final String MDC_APP_NAME = "appName";
     private static final String MDC_ENDPOINT = "endpoint";
     private static final String MDC_TRACE_ID = "traceId";
+    private final String appName;
 
     public RequestTraceFilter(@Value("${spring.application.name:take-one-app-backend}") String appName) {
         this.appName = appName;

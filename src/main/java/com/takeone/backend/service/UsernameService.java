@@ -14,11 +14,10 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class UsernameService {
 
-    private final UserRepository userRepository;
-    private final RedisTemplate<String, Object> redisTemplate;
-
     private static final String USERNAME_CACHE_PREFIX = "username:hash:";
     private static final long CACHE_TTL_HOURS = 24;
+    private final UserRepository userRepository;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     /**
      * Check if username is available (unique)

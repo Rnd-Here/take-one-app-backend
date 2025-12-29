@@ -12,7 +12,7 @@ public class SecurityUtil {
 
     /**
      * Get current authenticated user principal
-     * 
+     *
      * @return UserPrincipal or null if not authenticated
      */
     public static UserPrincipal getCurrentUser() {
@@ -27,7 +27,7 @@ public class SecurityUtil {
 
     /**
      * Get current authenticated user ID
-     * 
+     *
      * @return User ID or null if not authenticated
      */
     public static Long getCurrentUserId() {
@@ -37,7 +37,7 @@ public class SecurityUtil {
 
     /**
      * Get current authenticated user's Firebase UID
-     * 
+     *
      * @return Firebase UID or null if not authenticated
      */
     public static String getCurrentUserUid() {
@@ -47,7 +47,7 @@ public class SecurityUtil {
 
     /**
      * Get current authenticated username
-     * 
+     *
      * @return Username or null if not authenticated
      */
     public static String getCurrentUsername() {
@@ -57,7 +57,7 @@ public class SecurityUtil {
 
     /**
      * Check if current user is authenticated
-     * 
+     *
      * @return true if authenticated, false otherwise
      */
     public static boolean isAuthenticated() {
