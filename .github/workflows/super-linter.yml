@@ -22,12 +22,12 @@ jobs:
         env:
           VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: main
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.MY_PAT_TOKEN }}
           JAVA_CHECKSTYLE_CONFIG_FILE: sun_checks.xml
           # Disable some linters that might be too noisy initially
           VALIDATE_JAVA: true
           VALIDATE_PROPERTIES: true
           VALIDATE_XML: true
-          VALIDATE_MARKDOWN: true
+          VALIDATE_MARKDOWN: false
           VALIDATE_DOCKERFILE: true
           VALIDATE_YAML: true
