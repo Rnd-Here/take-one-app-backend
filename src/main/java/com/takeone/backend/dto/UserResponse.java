@@ -7,12 +7,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import lombok.ToString;
+
 /**
  * User Response DTO
  * Contains user information needed by UI
  */
 @Data
 @Builder
+@ToString(exclude = { "username", "displayName", "profilePictureUrl" })
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)

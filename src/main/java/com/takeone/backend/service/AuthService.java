@@ -39,7 +39,8 @@ public class AuthService {
 
         // Update existing user
         // Create new user
-        return existingUser.map(user -> updateExistingUser(user, decodedToken, request)).orElseGet(() -> createNewUser(decodedToken, request));
+        return existingUser.map(user -> updateExistingUser(user, decodedToken, request))
+                .orElseGet(() -> createNewUser(decodedToken, request));
     }
 
     /**
@@ -57,10 +58,13 @@ public class AuthService {
         }
 
         // Update phone and verification status
-        String phone = token.getClaims().get("phone_number").toString();
-        if (phone != null && !phone.isEmpty()) {
-            user.setMobile(phone);
-            user.setIsPhoneVerified(true); // If Firebase has phone, it's verified
+        Object phoneClaim = token.getClaims().get("phone_number");
+        if (phoneClaim != null) {
+            String phone = phoneClaim.toString();
+            if (!phone.isEmpty()) {
+                user.setMobile(phone);
+                user.setIsPhoneVerified(true);
+            }
         }
 
         // Update name if available from token
@@ -99,14 +103,21 @@ public class AuthService {
         user.setIsEmailVerified(token.isEmailVerified());
 
         // Phone number from Firebase
-        String phone = token.getClaims().get("phone_number").toString();
-        if (phone != null && !phone.isEmpty()) {
-            user.setMobile(phone);
-            user.setIsPhoneVerified(true);
+        Object phoneClaim = token.getClaims().get("phone_number");
+        if (phoneClaim != null) {
+            String phone = phoneClaim.toString();
+            if (!phone.isEmpty()) {
+                user.setMobile(phone);
+                user.setIsPhoneVerified(true);
+            } else {
+                user.setMobile(null);
+                user.setIsPhoneVerified(false);
+            }
         } else {
             user.setMobile(null);
             user.setIsPhoneVerified(false);
         }
+
         // Display name from Firebase
         String name = token.getName();
         if (name != null && !name.isEmpty()) {

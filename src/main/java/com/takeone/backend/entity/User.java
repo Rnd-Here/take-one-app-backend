@@ -2,24 +2,23 @@ package com.takeone.backend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(
-        name = "users",
-        indexes = {
-                @Index(name = "idx_uid", columnList = "uid"),
-                @Index(name = "idx_username", columnList = "username"),
-                @Index(name = "idx_username_hash", columnList = "username_hash"),
-                @Index(name = "idx_account_type", columnList = "account_type"),
-                @Index(name = "idx_is_active", columnList = "is_active")
-        }
-)
+@Table(name = "users", indexes = {
+        @Index(name = "idx_uid", columnList = "uid"),
+        @Index(name = "idx_username", columnList = "username"),
+        @Index(name = "idx_username_hash", columnList = "username_hash"),
+        @Index(name = "idx_account_type", columnList = "account_type"),
+        @Index(name = "idx_is_active", columnList = "is_active")
+})
 @Getter
 @Setter
+@ToString(exclude = { "email", "mobile", "firstName", "lastName", "dob" })
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {

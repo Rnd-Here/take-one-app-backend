@@ -6,13 +6,16 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
+
 /**
  * User Profile Response
  */
 @Data
 @Builder
+@ToString(exclude = { "email", "mobile", "firstName", "lastName", "dob" })
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)

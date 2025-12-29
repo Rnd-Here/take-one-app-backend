@@ -21,6 +21,7 @@ import java.util.Optional;
 public class SessionService {
 
     private final SessionRepository sessionRepository;
+    private final DeviceTokenService deviceTokenService;
     private static final int SESSION_EXPIRY_DAYS = 30;
     private static final int TOKEN_LENGTH = 64; // bytes, results in 88 char base64 string
     private static final SecureRandom secureRandom = new SecureRandom();
@@ -64,7 +65,8 @@ public class SessionService {
 
         Session session = sessionOpt.get();
 
-        // Ensure user is loaded (JOIN FETCH in query should handle this, but being explicit)
+        // Ensure user is loaded (JOIN FETCH in query should handle this, but being
+        // explicit)
         User user = session.getUser();
         if (user == null) {
             log.warn("Session has null user reference");
@@ -145,7 +147,13 @@ public class SessionService {
             Session session = sessionOpt.get();
             session.setIsActive(false);
             sessionRepository.save(session);
-            log.info("Invalidated session for user: {}", session.getUser().getUsername());
+
+            // Also deactivate the FCM token for this specific device
+            if (session.getUser() != null && session.getDeviceId() != null) {
+                deviceTokenService.deactivateToken(session.getUser().getId(), session.getDeviceId());
+            }
+
+            log.info("Invalidated session and deactivated FCM token for user: {}", session.getUser().getUsername());
         }
     }
 
@@ -155,7 +163,8 @@ public class SessionService {
     @Transactional
     public void invalidateAllUserSessions(Long userId) {
         int count = sessionRepository.deactivateAllUserSessions(userId);
-        log.info("Invalidated {} sessions for userId: {}", count, userId);
+        deviceTokenService.deactivateAllTokens(userId);
+        log.info("Invalidated {} sessions and all FCM tokens for userId: {}", count, userId);
     }
 
     /**
@@ -185,8 +194,15 @@ public class SessionService {
      */
     @Transactional
     public void cleanupExpiredSessions() {
-        int count = sessionRepository.deactivateExpiredSessions(LocalDateTime.now());
-        log.info("Cleaned up {} expired sessions", count);
+        // 1. Deactivate currently expired sessions
+        int deactivatedCount = sessionRepository.deactivateExpiredSessions(LocalDateTime.now());
+        log.info("Deactivated {} newly expired sessions", deactivatedCount);
+
+        // 2. Hard delete sessions that have been inactive/deactivated for more than 60
+        // days
+        LocalDateTime cutoffDate = LocalDateTime.now().minusDays(60);
+        int deletedCount = sessionRepository.deleteOldInactiveSessions(cutoffDate);
+        log.info("Hard deleted {} sessions inactive since {}", deletedCount, cutoffDate);
     }
 
     /**

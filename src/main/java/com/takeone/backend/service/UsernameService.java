@@ -56,8 +56,7 @@ public class UsernameService {
                 cacheKey,
                 isAvailable,
                 CACHE_TTL_HOURS,
-                TimeUnit.HOURS
-        );
+                TimeUnit.HOURS);
 
         return isAvailable;
     }
@@ -97,8 +96,7 @@ public class UsernameService {
                 reservationKey,
                 userId,
                 durationMinutes,
-                TimeUnit.MINUTES
-        );
+                TimeUnit.MINUTES);
 
         if (Boolean.TRUE.equals(reserved)) {
             log.info("Username reserved: {} for user: {}", username, userId);

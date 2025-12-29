@@ -6,12 +6,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import lombok.ToString;
+
 /**
  * Authentication Request
  * Sent from Flutter UI after Firebase authentication
  */
 @Data
 @Builder
+@ToString(exclude = "idToken")
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuthRequest {

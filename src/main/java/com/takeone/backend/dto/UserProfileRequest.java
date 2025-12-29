@@ -8,12 +8,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * User Profile Request (Create/Update)
  */
 @Data
 @Builder
+@ToString(exclude = { "firstName", "lastName", "dob" })
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
