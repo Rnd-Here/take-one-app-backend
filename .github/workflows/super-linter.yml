@@ -28,6 +28,6 @@ jobs:
           VALIDATE_JAVA: true
           VALIDATE_PROPERTIES: true
           VALIDATE_XML: true
-          VALIDATE_MARKDOWN: false
+          VALIDATE_MARKDOWN: true
           VALIDATE_DOCKERFILE: true
           VALIDATE_YAML: true
