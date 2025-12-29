@@ -4,9 +4,9 @@
 
     <springProperty scope="context" name="appName" source="spring.application.name" defaultValue="take-one-app-backend"/>
 
-    <springProperty scope="context" name="lokiUrl" source="management.loki.url" defaultValue="https://logs-prod-028.grafana.net/loki/api/v1/push"/>
-    <springProperty scope="context" name="lokiUser" source="management.loki.user" defaultValue="1438380"/>
-    <springProperty scope="context" name="lokiToken" source="management.loki.token" defaultValue="gl_*****"/>
+    <springProperty scope="context" name="lokiUrl" source="management.loki.url"/>
+    <springProperty scope="context" name="lokiUser" source="management.loki.user"/>
+    <springProperty scope="context" name="lokiToken" source="management.loki.token"/>
 
     <springProperty scope="context" name="splunkUrl" source="splunk.url" defaultValue="http://localhost:8088/services/collector/event"/>
     <springProperty scope="context" name="splunkToken" source="splunk.token" defaultValue="0000-0000..."/>
