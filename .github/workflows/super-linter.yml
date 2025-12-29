@@ -2,9 +2,9 @@ name: "Super Linter"
 
 on:
   push:
-    branches: ["main"]
+    branches: [ "main" ]
   pull_request:
-    branches: ["main"]
+    branches: [ "main" ]
 
 jobs:
   lint:
@@ -23,6 +23,7 @@ jobs:
           VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.MY_PAT_TOKEN }}
+          ENABLE_GITHUB_ACTIONS_STEP_SUMMARY: true
           JAVA_CHECKSTYLE_CONFIG_FILE: sun_checks.xml
           # Disable some linters that might be too noisy initially
           VALIDATE_JAVA: true
